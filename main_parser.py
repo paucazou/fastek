@@ -27,10 +27,10 @@ def main(text,result="latex"): # TODO detect and make a warning for genuine late
     for i,line in enumerate(text):
         mark_count = line.count(mark)
         for j in range(mark_count):
-            first_part, mark, late_part = line.partition(',;')
+            first_part, mark_, late_part = line.partition(',;')
             if not late_part:
                 break
-            late_part = parsers[late_part[0]].main(late_part[1:],text,result)
+            late_part = parsers[late_part[0]].main(late_part = late_part[1:],text=text,result=result)
             line = first_part + late_part
         ntext.append(line) # TODO traitement de la fin de ligne
     
