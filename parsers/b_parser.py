@@ -21,5 +21,5 @@ def bold_parser():
 functions = {
         "i":italic_parser,
         "u":underlined_parser,
-        "": bold_parser,
+        " ": bold_parser,
         }
