@@ -9,7 +9,9 @@ def findall(string,chars):
     """Find all characters or string of characters
     contained in string.
     Return a list of indexes"""
-    return [ pos for pos, c in enumerate(string) if c == chars]
+    nb = len(chars) 
+    return [ pos for pos, c in enumerate(string)
+            if pos + nb <= len(string) and string[pos:pos + nb] == chars]
 
 def underlineone(string,pos=-1,char='',printit=True):
     """Make a humanreadable emphasis under pos in string.
@@ -26,17 +28,18 @@ def underlineone(string,pos=-1,char='',printit=True):
         print(ns)
     return ns
 
-def underlineall(string,char,printit=True):
+def underlineall(string,chars,printit=True):
     """Similar to underlineone, but put an emphasis under all chars
     if printit == True, print it before return it"""
     if '\n' in string:
         raise SyntaxError("Please enter only one line")
-    pos = findall(string,char)
+    pos = findall(string,chars)
     ns = ''
     j = 0
+    lchars = len(chars)
     for i in pos:
-        ns += ' '*(i-j) + "^"
-        j=i+1
+        ns += ' '*(i-j) + "^"*lchars
+        j=i+lchars
     ns = string + '\n' + ns
     if printit:
         print(ns)
