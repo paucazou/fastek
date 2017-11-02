@@ -7,6 +7,7 @@ import importlib
 import os
 import phlog
 import sys
+import utils
 
 parsers_path = os.path.dirname(os.path.abspath(__file__)) + "/parsers/"
 sys.path.append(parsers_path)
@@ -29,6 +30,18 @@ def main(text,result="latex"): # TODO detect and make a warning for genuine late
     ntext = []
     for i,line in enumerate(text):
         line_before = line
+        
+        ### managing latex genuine tag
+        if '\\' in line:
+            logger.warning("Genuine latex tags were found, but won't be evaluated : ")
+            utils.underlineall(line,'\\')
+            
+        ### managing end of line
+        line = line.replace(" ,,","\\\\")
+        if ",," in line:
+            utils.underlineone(line,char=',,')
+            raise SyntaxError("Please put a space before ,, in line {} : {}".format(i,line_before))
+        
         while line.count(opening_mark):
             first_part, mark, late_part = line.partition(',;')
             if not late_part:
@@ -40,7 +53,7 @@ def main(text,result="latex"): # TODO detect and make a warning for genuine late
             line = first_part + late_part
         if closing_mark in line:
             raise SyntaxError("A closing tag has no opening tag in line {} : {}".format(i,line_before))
-        ntext.append(line) # TODO traitement de la fin de ligne
+        ntext.append(line)
     
     return '\n'.join(ntext)
 

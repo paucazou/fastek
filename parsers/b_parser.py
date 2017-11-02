@@ -6,7 +6,7 @@
 import _shared
 
 translators = {
-    'i' : _shared.Translator("bi","\textit","italic"),
+    'i' : _shared.Translator("bi","textit","italic"),
     'u' : _shared.Translator("bu","","underlined"),
     'b' : _shared.Translator("bb","","bold"),
     }
@@ -15,7 +15,7 @@ translators = {
 def main(**kw):
     """Return correct answer"""
     if kw['result'] == "latex":
-        answer = _shared._tex_parser(**kw)
+        answer = _shared._tex_parser(**kw,translators=translators)
     return answer
 
 
