@@ -3,32 +3,19 @@
 #Deus, in adjutorium meum intende
 """This module manages the "b" letter"""
 
+import _shared
+
+translators = {
+    'i' : _shared.Translator("bi","\textit","italic"),
+    'u' : _shared.Translator("bu","","underlined"),
+    'b' : _shared.Translator("bb","","bold"),
+    }
+
 
 def main(**kw):
-    """Send data to the right function"""
-    return functions[kw['late_part'][0]](late_part=kw['late_part'][1:],text=kw['text'],result=kw['result'])
+    """Return correct answer"""
+    if kw['result'] == "latex":
+        answer = _shared._tex_parser(**kw)
+    return answer
 
-def italic_parser(**kw):
-    """Return italic mark in tex"""
-    italic_part, mark, late_part = _endmark(kw['late_part'])
-    return "\textit{" + italic_part[1:] + '}' + late_part # TODO attention aux blancs. Les rendre obligatoire -> oui, ce n'est pas lisible sinon
 
-def underlined_parser(late_part,text,result):
-    pass
-
-def bold_parser(late_part,text,result):
-    pass
-
-def _endmark(line): # TODO fonction à mettre là où c'est nécessaire
-    """Verifies if an endmark exists at the right place
-    if True, return line.partition(',;')"""
-    if ',;' in line.partition(',; '):# TODO ce n'est pas sûr du tout.
-        raise SyntaxError("Marks are not correctly positioned in line {}".format(line)) # TODO add line number
-    # TODO ne pas tolérer une espace avant la balise fermante
-    return line.partition(',;')
-
-functions = {
-        "i":italic_parser,
-        "u":underlined_parser,
-        " ": bold_parser,
-        }

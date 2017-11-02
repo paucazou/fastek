@@ -12,7 +12,8 @@ parsers_path = os.path.dirname(os.path.abspath(__file__)) + "/parsers/"
 sys.path.append(parsers_path)
 
 logger = phlog.loggers['console']
-mark = ",;"
+opening_mark = ",;"
+closing_mark = ';;'
 shabang = '#!/usr/bin/fastek' # TODO shaband must contain the type of document in arg : #!/usr/bin/fastek lesson
 suffix = ".ftk"
 parsers = {file[0]:importlib.import_module(file[:-3]) for file in os.listdir(parsers_path) if file[1:] == "_parser.py" in file
@@ -22,16 +23,23 @@ def main(text,result="latex"): # TODO detect and make a warning for genuine late
     """Main parsers. text is a string
     result : type of text returned :
     latex (default): translate fastek to latex
-    raw : return raw text only"""    
+    raw : return raw text only"""
+    if isinstance(text,str):
+        text = text.split('\n')
     ntext = []
     for i,line in enumerate(text):
-        mark_count = line.count(mark)
-        for j in range(mark_count):
-            first_part, mark_, late_part = line.partition(',;')
+        line_before = line
+        while line.count(opening_mark):
+            first_part, mark, late_part = line.partition(',;')
             if not late_part:
                 break
-            late_part = parsers[late_part[0]].main(late_part = late_part[1:],text=text,result=result)
+            late_part = parsers[late_part[0]].main(late_part = late_part,
+                                                   text=text,
+                                                   result=result,
+                                                   line_nb = i)
             line = first_part + late_part
+        if closing_mark in line:
+            raise SyntaxError("A closing tag has no opening tag in line {} : {}".format(i,line_before))
         ntext.append(line) # TODO traitement de la fin de ligne
     
     return '\n'.join(ntext)
