@@ -9,6 +9,8 @@ import utils
 
 logger = phlog.loggers['console']
 
+# TODO intégrer \chapter*{}
+
 translators = {
     'c' : _shared.Translator("tc","chapter","chapter"), # WARNING indisponible pour docs article et letter. Que faire ? Un warning ? Un refus ?
     's' : _shared.Translator("ts","section","section"),

@@ -3,7 +3,9 @@
 #Deus, in adjutorium meum intende
 """Parses file"""
 
+import collections
 import importlib
+import indexer
 import os
 import phlog
 import sys
@@ -20,16 +22,23 @@ suffix = ".ftk"
 parsers = {file[0]:importlib.import_module(file[:-3]) for file in os.listdir(parsers_path) if file[1:] == "_parser.py" in file
     } # a dict with a simple letter in key, and the module matching with it
 
-def main(text,result="latex"): # TODO detect and make a warning for genuine latex marks
+
+def main(text,result="latex",index_project='',file_name=''): # TODO detect and make a warning for genuine latex marks
     """Main parsers. text is a string
     result : type of text returned :
     latex (default): translate fastek to latex
-    raw : return raw text only"""
+    raw : return raw text only
+    index_project: the path of a project in order to save the names in an index.
+    file_name is the name of the file containing the text"""
     if isinstance(text,str):
         text = text.split('\n')
         
     ### managing placeholders
     text = parsers['v'].main(text)
+    
+    ### saving names
+    if index_project:
+        indexer.parse(text,index_project,file_name)
         
     ### managing latex genuine tag
     for line in text:
@@ -37,7 +46,6 @@ def main(text,result="latex"): # TODO detect and make a warning for genuine late
             logger.warning("Genuine latex tags were found, but won't be evaluated : ")
             utils.underlineall(line,'\\')
             
-    ntext = []
     for i,line in enumerate(text):
         line_before = line
         
@@ -58,7 +66,7 @@ def main(text,result="latex"): # TODO detect and make a warning for genuine late
             line = first_part + late_part
         if closing_mark in line:
             raise SyntaxError("A closing tag has no opening tag in line {} : {}".format(i,line_before))
-        ntext.append(line)
+        text[i] = line
     
     return '\n'.join(ntext)
 
