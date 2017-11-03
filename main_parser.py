@@ -27,15 +27,20 @@ def main(text,result="latex"): # TODO detect and make a warning for genuine late
     raw : return raw text only"""
     if isinstance(text,str):
         text = text.split('\n')
-    ntext = []
-    for i,line in enumerate(text):
-        line_before = line
         
-        ### managing latex genuine tag
+    ### managing placeholders
+    text = parsers['v'].main(text)
+        
+    ### managing latex genuine tag
+    for line in text:
         if '\\' in line:
             logger.warning("Genuine latex tags were found, but won't be evaluated : ")
             utils.underlineall(line,'\\')
             
+    ntext = []
+    for i,line in enumerate(text):
+        line_before = line
+        
         ### managing end of line
         line = line.replace(" ,,","\\\\")
         if ",," in line:
