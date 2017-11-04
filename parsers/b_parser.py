@@ -5,6 +5,8 @@
 
 import _shared
 
+is_closing_tag_allowed = True
+
 translators = {
     'i' : _shared.Translator("bi","textit","italic"),
     'u' : _shared.Translator("bu","","underlined"),

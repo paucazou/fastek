@@ -9,6 +9,7 @@ import utils
 
 logger = phlog.loggers['console']
 
+has_closing_tag = False
 # TODO intégrer \chapter*{}
 
 translators = {

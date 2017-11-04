@@ -3,11 +3,13 @@
 #Deus, in adjutorium meum intende
 """Parses file"""
 
+import check
 import collections
 import importlib
 import indexer
 import os
 import phlog
+import re
 import sys
 import utils
 
@@ -80,6 +82,35 @@ def _load_file(path):
     if text[0].partition(' ')[0] != shabang:
         raise ValueError("{} is not a valid fastek file".format(path))
     return text
+
+def check(text):
+    """Check syntax of text
+    text is a list or a listlike"""
+    if not isinstance(text,list):
+        raise TypeError("text must be a listlike :\n{}".format(text))
+    
+    # check placeholders
+    parsers['v'].check(text)
+    
+    for i,line in enumerate(text):
+        # checking ends of lines
+        space_before_match = re.search("[^ ],,",line)
+        if space_before_match:
+            utils.underlineall(line,space_before_match.group())
+            raise SyntaxError("Please put a space before EOL tag in line {}".format(i))
+        space_after_match = re.search(",,[^ ]",line)
+        if space_after_match:
+            utils.underlineall(line,space_after_match.group())
+            raise SyntaxError("Please put a space or a carriage return after EOL tag in line {}".format(i))
+        
+        # checking illegal closing tags
+        for parser, module in parsers.items():
+            if not module.has_closing_tag:
+                if closing_mark + parser in line:
+                    utils.underlineall(line,closing_mark+parser)
+                    raise SyntaxError("{} parser has no closing tag: check line {}".format(parser,i))
+     
+    
         
     
 

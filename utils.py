@@ -5,6 +5,17 @@
 not directly related to the purpose
 of this program"""
 
+def wrappedchars(string,chars):
+    """Find the first occurrence of chars if exist
+    and return the chars with the character before
+    and the character after, if they exist"""
+    index = string.index(chars)
+    if index != 0:
+        chars = string[index-1] + chars
+    if index + len(chars) + 1 <= len(chars):
+        chars += string[index + len(chars) + 1]
+    return chars
+
 def findall(string,chars):
     """Find all characters or string of characters
     contained in string.
