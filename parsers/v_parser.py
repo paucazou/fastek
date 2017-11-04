@@ -12,7 +12,13 @@ logger = phlog.loggers['console']
 
 has_closing_tag = False
 
-def check(text):
+def check(mark):
+    """check if mark is allowed"""
+    if mark != "v":
+        return False
+    return True
+
+def check_syntax(text):
     """Checks the syntax correctness
     Return True if all is good
     WARNING this function does not check

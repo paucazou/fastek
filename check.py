@@ -32,4 +32,13 @@ def checklmark(mark,line,line_nb):
         utils.underlineall(line,mark)
         raise SyntaxError("Please put a space after closing tag in line {}".format(line_nb))
     return True
+
+def checkmark(mark,parser,line,line_nb):
+    """Checks if mark exist.
+    It can be an opening or a closing mark
+    """
+    if not parser.check(mark):
+        utils.underlineall(line,mark)
+        raise SyntaxError("{} is not allowed on line {}".format(mark,line_nb))
+    return True
         
