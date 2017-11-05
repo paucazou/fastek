@@ -3,7 +3,7 @@
 #Deus, in adjutorium meum intende
 """Manages "v", to expand placeholders"""
 
-import check
+import checker
 import phlog
 import re
 import utils
@@ -27,10 +27,24 @@ def check_syntax(text):
     names = []
     for i,line in enumerate(text):
         # check names declaration
+        
         if ',;v' in line:
             mark = utils.wrappedchars(line,',;v')
-            check.checkfmark(mark,line,i)
-            names.append(line.split()[1])
+            checker.checkfmark(mark,line,i)
+            line_spl = line.split()
+            if line_spl[0] != ',;v':
+                raise SyntaxError("Unknown tag '{}' on line {}".format(line_spl[0],i))
+            try:
+                names.append(line_spl[1])
+            except IndexError:
+                utils.underlineall(line,',;v')
+                raise SyntaxError("There's no placeholder after opening tag ,;v in line {}".format(i))
+            try:
+                assert len(line_spl) > 2
+            except AssertionError:
+                utils.underlineall(line,line_spl[1])
+                raise SyntaxError("No value given to '{}' at line {}".format(line_spl[1],i))
+            
         # check expansion
         if "::" in line:
             # spaces
@@ -48,7 +62,7 @@ def check_syntax(text):
                 if  name_checked not in names:
                     utils.underlineall(line,name_checked)
                     raise NameError("There is no name '{}' in line {}".format(name_checked,i))
-                sline = line.partition("::")[2]
+                sline = sline.partition("::")[2]
     return True   
 
 def main(text):

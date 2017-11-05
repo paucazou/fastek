@@ -3,7 +3,7 @@
 #Deus, in adjutorium meum intende
 """Parses file"""
 
-import check
+import checker
 import collections
 import importlib
 import indexer
@@ -80,10 +80,10 @@ def check(text):
         raise TypeError("text must be a listlike :\n{}".format(text))
     
     # managing latex genuine tag
-    for line in text:
+    for i, line in enumerate(text):
         if '\\' in line:
-            logger.warning("Genuine latex tags were found, but won't be evaluated : ")
             utils.underlineall(line,'\\')
+            logger.warning("Genuine latex tags were found, but won't be evaluated on line {}".format(i))
     
     # check placeholders
     parsers['v'].check_syntax(text)
@@ -105,7 +105,8 @@ def check(text):
                 if closing_mark + parser in line:
                     utils.underlineall(line,closing_mark+parser)
                     raise SyntaxError("{} parser has no closing tag: check line {}".format(parser,i))
-                
+        
+        # checking other tags
         if opening_mark in line:
             fline,nothing, sline = line.partition(opening_mark)
             while opening_mark in sline:
@@ -118,18 +119,18 @@ def check(text):
                 # checking each sub parser (except 'v', which is already done)
                 mark_to_test = sline.split()[0]
                 parser = parsers[mark_to_test[0]]
-                check.checkmark(mark_to_test,parser,line,line_nb)
+                checker.checkmark(mark_to_test,parser,line,line_nb)
                 
                 # checking closing tag
                 closing_tag = closing_mark + mark_to_test
                 opening_tag = opening_mark + mark_to_test
                 if opening_tag in sline:
                     utils.underlineall(sline,opening_tag)
-                    raise SyntaxError("{} opening tag has been found before closing tag expected on line {}".format(opening_tag,i)
+                    raise SyntaxError("{} opening tag has been found before closing tag expected on line {}".format(opening_tag,i))
                 if closing_tag in sline:
                     part1,tag,part2 = sline.partition(closing_tag)
                     sline = part1 + part2
-                else:
+                else: # looking for closing tag in the rest of the text
                     for j,line2 in enumerate(text[i+1:]):
                         fline2, mark_expected, sline2 = line2.partition(closing_tag)
                         if opening_tag in fline2:

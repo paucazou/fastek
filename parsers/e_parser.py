@@ -8,6 +8,7 @@ import phlog
 import utils
 
 logger = phlog.loggers['console']
+has_closing_tag = True
 
 def main(**kw):
-    
+    pass

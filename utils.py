@@ -8,12 +8,17 @@ of this program"""
 def wrappedchars(string,chars):
     """Find the first occurrence of chars if exist
     and return the chars with the character before
-    and the character after, if they exist"""
+    and the character after, if they exist
+    if they don't, add a space before, or after"""
     index = string.index(chars)
     if index != 0:
         chars = string[index-1] + chars
+    else:
+        chars = " " + chars
     if index + len(chars) + 1 <= len(chars):
         chars += string[index + len(chars) + 1]
+    else:
+        chars += " "
     return chars
 
 def findall(string,chars):

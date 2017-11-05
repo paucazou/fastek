@@ -5,7 +5,7 @@
 
 import _shared
 
-is_closing_tag_allowed = True
+has_closing_tag = True
 
 translators = {
     'i' : _shared.Translator("bi","textit","italic"),

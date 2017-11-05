@@ -12,8 +12,9 @@ logger = phlog.loggers['console']
 has_closing_tag = False
 
 translators = {
-        'e':_shared.
+        'e':None
         }
 
 def main(**kw):
+    pass
     
