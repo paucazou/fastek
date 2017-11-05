@@ -13,6 +13,13 @@ translators = {
     'b' : _shared.Translator("bb","","bold"),
     }
 
+def check(mark):
+    """Checks if mark can be found in translators"""
+    return mark[1] in translators
+
+def checkargs(sline):
+    """check if arguments are present, at least one"""
+    return not ";;" in sline.split()[1]
 
 def main(**kw):
     """Return correct answer"""

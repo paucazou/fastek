@@ -109,45 +109,50 @@ def check(text):
         # checking other tags
         if opening_mark in line:
             fline,nothing, sline = line.partition(opening_mark)
-            while opening_mark in sline:
-                # checking alone closing tags -> closing tags are deleted
-                if closing_mark in fline:
-                    alone_closing_tag = utils.wrappedchars(fline,closing_mark)
-                    print(utils.underlineall(fline,alone_closing_tag,False) + nothing + sline)
-                    raise SyntaxError("An only closing tag has been found in line {}".format(i))
-                
-                # checking each sub parser (except 'v', which is already done)
+            while True:
+                # checking each sub parser
                 mark_to_test = sline.split()[0]
                 parser = parsers[mark_to_test[0]]
-                checker.checkmark(mark_to_test,parser,line,line_nb)
+                checker.checkmark(mark_to_test,parser,line,i)
+                checker.checkargs(parser,mark_to_test,sline,line,i) # TODO checks if arguments are present, if necessary
                 
                 # checking closing tag
-                closing_tag = closing_mark + mark_to_test
-                opening_tag = opening_mark + mark_to_test
-                if opening_tag in sline:
-                    utils.underlineall(sline,opening_tag)
-                    raise SyntaxError("{} opening tag has been found before closing tag expected on line {}".format(opening_tag,i))
-                if closing_tag in sline:
-                    part1,tag,part2 = sline.partition(closing_tag)
-                    sline = part1 + part2
-                else: # looking for closing tag in the rest of the text
-                    for j,line2 in enumerate(text[i+1:]):
-                        fline2, mark_expected, sline2 = line2.partition(closing_tag)
-                        if opening_tag in fline2:
-                            print("Opening tag not closed, line {}".format(i))
+                if parser.has_closing_tag:
+                    closing_tag = closing_mark + mark_to_test
+                    opening_tag = opening_mark + mark_to_test
+                    if opening_tag in sline:
+                        utils.underlineall(sline,opening_tag)
+                        raise SyntaxError("{} opening tag has been found before closing tag expected on line {}".format(opening_tag,i))
+                    if closing_tag in sline:
+                        part1,tag,part2 = sline.partition(closing_tag)
+                        sline = part1 + part2
+                    else: # looking for closing tag in the rest of the text
+                        for j,line2 in enumerate(text[i+1:]):
+                            fline2, mark_expected, sline2 = line2.partition(closing_tag)
+                            if opening_tag in fline2:
+                                print("Opening tag not closed, line {}".format(i))
+                                print(fline,nothing,utils.underlineall(sline,opening_tag,False))
+                                print("Opening tag found too soon, line {}".format(j))
+                                utils.underlineall(line2,opening_tag)
+                                raise SyntaxError("{} opening tag has been found before closing tag expected".format(opening_tag))
+                            if mark_expected:
+                                text[j] = fline2 + sline2
+                                break
+                        else:
                             print(fline,nothing,utils.underlineall(sline,opening_tag,False))
-                            print("Opening tag found too soon, line {}".format(j))
-                            utils.underlineall(line2,opening_tag)
-                            raise SyntaxError("{} opening tag has been found before closing tag expected".format(opening_tag))
-                        if mark_expected:
-                            text[j] = fline2 + sline2
-                            break
-                    else:
-                        print(fline,nothing,utils.underlineall(sline,opening_tag,False))
-                        raise SyntaxError("No closing tag found for {} in line {}".format(opening_tag,i))
+                            raise SyntaxError("No closing tag found for {} in line {}".format(opening_tag,i))
                 new_partition = sline.partition(opening_mark)
                 fline = fline + nothing + new_partition[0]
                 nothing, sline = new_partition[1:]
+                    
+                if opening_mark not in sline: # condition to break loop
+                    break
+        
+        # checking alone closing tags -> closing tags are supposed to be deleted
+        if closing_mark in line:
+            alone_closing_tag = utils.wrappedchars(line,closing_mark)
+            utils.underlineall(line,alone_closing_tag)
+            raise SyntaxError("An only closing tag has been found in line {}".format(i))
             
         
     

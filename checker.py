@@ -4,7 +4,7 @@
 """Checks the syntax"""
 
 import utils
-#BUG il faut traiter les cas où la basile commence juste après un début de ligne, et est suivie d'une fin de ligne 
+
 def checkfmark(mark,line,line_nb):
     """Checks if syntax of the first mark is correct, 
     i.e. has a space before and a space after

@@ -18,6 +18,10 @@ def check(mark):
         return False
     return True
 
+def checkargs(sline):
+    """for compatibility"""
+    return True
+
 def check_syntax(text):
     """Checks the syntax correctness
     Return True if all is good
