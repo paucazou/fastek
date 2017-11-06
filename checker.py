@@ -41,4 +41,11 @@ def checkmark(mark,parser,line,line_nb):
         utils.underlineall(line,mark)
         raise SyntaxError("{} is not allowed on line {}".format(mark,line_nb))
     return True
+
+def checkargs(parser,mark,line_part,line,i):
+    """Checks if arguments are correct"""
+    if not parser.checkargs(mark,line_part):
+        utils.underlineall(line,mark)
+        raise SyntaxError("{} is not a correct arg for ,;{} on line {}".format(line_part,mark,i))
+    return True
         

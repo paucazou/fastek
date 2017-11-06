@@ -76,7 +76,7 @@ def _load_file(path):
 def check(text):
     """Check syntax of text
     text is a list or a listlike"""
-    if not isinstance(text,list):
+    if not isinstance(text,list): # TEST
         raise TypeError("text must be a listlike :\n{}".format(text))
     
     # managing latex genuine tag
@@ -85,11 +85,11 @@ def check(text):
             utils.underlineall(line,'\\')
             logger.warning("Genuine latex tags were found, but won't be evaluated on line {}".format(i))
     
-    # check placeholders
+    # check placeholders # TEST
     parsers['v'].check_syntax(text)
     
     for i,line in enumerate(text):
-        # checking ends of lines
+        # checking ends of lines TEST
         space_before_match = re.search("[^ ],,",line)
         if space_before_match:
             utils.underlineall(line,space_before_match.group())
@@ -99,7 +99,7 @@ def check(text):
             utils.underlineall(line,space_after_match.group())
             raise SyntaxError("Please put a space or a carriage return after EOL tag in line {}".format(i))
         
-        # checking illegal closing tags
+        # checking illegal closing tags TEST
         for parser, module in parsers.items():
             if not module.has_closing_tag:
                 if closing_mark + parser in line:
@@ -114,7 +114,7 @@ def check(text):
                 mark_to_test = sline.split()[0]
                 parser = parsers[mark_to_test[0]]
                 checker.checkmark(mark_to_test,parser,line,i)
-                checker.checkargs(parser,mark_to_test,sline,line,i) # TODO checks if arguments are present, if necessary
+                #checker.checkargs(parser,mark_to_test,sline,line,i) # TODO checks if arguments are present, if necessary
                 
                 # checking closing tag
                 if parser.has_closing_tag:
@@ -146,6 +146,7 @@ def check(text):
                 nothing, sline = new_partition[1:]
                     
                 if opening_mark not in sline: # condition to break loop
+                    line = fline + nothing + sline
                     break
         
         # checking alone closing tags -> closing tags are supposed to be deleted
@@ -153,6 +154,8 @@ def check(text):
             alone_closing_tag = utils.wrappedchars(line,closing_mark)
             utils.underlineall(line,alone_closing_tag)
             raise SyntaxError("An only closing tag has been found in line {}".format(i))
+    
+    return True
             
         
     
