@@ -22,7 +22,7 @@ def checkargs(sline):
     """for compatibility"""
     return True
 
-def check_syntax(text):
+def check_syntax(text): # TEST
     """Checks the syntax correctness
     Return True if all is good
     WARNING this function does not check
@@ -69,7 +69,7 @@ def check_syntax(text):
                 sline = sline.partition("::")[2]
     return True   
 
-def main(text):
+def main(text): # TEST
     """Expand all placeholders.
     Syntax: ,;v name things to be stored\\n
     Please note that this function is case sensitive
