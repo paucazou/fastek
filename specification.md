@@ -23,6 +23,8 @@ A root tag is followed by a letter, which refers to a specific parser. This lett
 
 Spaces around the tags: 
 * No space is allowed inside the tag, including between the root and the letters.
+* A space between the tag and what follows it is mandatory.
+* No space is allowed just before closing tag.
 ### EOL tag
 Tag|Name|Example
 ---|-----|-------
@@ -37,7 +39,7 @@ Tag|Name|Example
 ::|Expand tag|::placeholder
 
 
-The Expand tag is used to expand the data linked to the name which followed it. The Expand tag must be after a space, a space-like, a start of line, and followed by a name already linked to some data, itself followed by a space, a space-like or an end of line.
+The Expand tag is used to expand the data linked to the name which followed it. The Expand tag must be followed by a name already linked to some data, itself followed by a space, a space-like or an end of line.
 
 ## Tags supported
 Only the tags below are supposed to be corrects by the fastek interpreter. No other tag is allowed. However, it is possible to extend the number of tags supported by adding new parsers (see below : Improve fastek).

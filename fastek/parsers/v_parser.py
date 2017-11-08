@@ -56,7 +56,7 @@ def check_syntax(text): # TEST
                 utils.underlineall(line,":: ")
                 raise SyntaxError("Please do not put a space after '::' in line {}".format(i))
             space_before_match = re.search("[^ ]::",line)
-            if space_before_match:
+            if False and space_before_match: # False: specs have changed
                 utils.underlineall(line,space_before_match.group())
                 raise SyntaxError("Please put a space before '::' or start the line with it in line {}".format(i))
             # is the name already saved ?

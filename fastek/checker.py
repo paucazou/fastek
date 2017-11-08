@@ -14,7 +14,7 @@ def checkfmark(mark,line,line_nb):
     only useful if error
     return True if noerror, else raise exception
     """
-    if mark[0] != ' ':
+    if False and mark[0] != ' ': # False, because specs have changed
         utils.underlineall(line,mark)
         raise SyntaxError("Please put a space before opening tag in line {}".format(line_nb))
     if mark[-1] != ' ':
@@ -28,7 +28,7 @@ def checklmark(mark,line,line_nb):
     if mark[0] == ' ':
         utils.underlineall(line,mark)
         raise SyntaxError("Please do not put a space before closing tag in line {}".format(line_nb))
-    if mark[-1] != ' ':
+    if False and mark[-1] != ' ': # always False, because specs have changed
         utils.underlineall(line,mark)
         raise SyntaxError("Please put a space after closing tag in line {}".format(line_nb))
     return True
