@@ -52,7 +52,7 @@ Tags are case sensitive. Tags which have no closing tags are closed by the end o
   * i: italic. LaTeX: \italic{}
   * b: bold. LaTeX: \bold{}
   * u: underline. LaTeX: \underlined{}
-### c: comments
+### c: comments - [x]
 * Comments must be closed : ;;c
 * Comments have no subtags.
 * Text inside c tags will not appear in output.
@@ -98,7 +98,7 @@ Tags are case sensitive. Tags which have no closing tags are closed by the end o
 
 ### Index
 
-### Placeholder
+### Placeholder - [x]
 ### Latex tags
 Latex tags may be directly included into fastek, but are not evaluated.
 
