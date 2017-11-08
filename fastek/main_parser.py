@@ -25,15 +25,21 @@ parsers = {file[0]:importlib.import_module(file[:-3]) for file in os.listdir(par
     } # a dict with a simple letter in key, and the module matching with it
 
 
-def main(text,result="latex",index_project='',file_name=''): # TODO detect and make a warning for genuine latex marks
+def main(text,result="latex",check_text=True,index_project='',file_name=''): # TODO detect and make a warning for genuine latex marks
     """Main parsers. text is a string
     result : type of text returned :
     latex (default): translate fastek to latex
     raw : return raw text only
+    check : if syntax is checked before. default : True
     index_project: the path of a project in order to save the names in an index.
     file_name is the name of the file containing the text"""
     if isinstance(text,str):
         text = text.split('\n')
+        
+    if check_text:
+        check(text)
+        
+    print(text)
         
     ### managing placeholders
     text = parsers['v'].main(text)
@@ -42,10 +48,9 @@ def main(text,result="latex",index_project='',file_name=''): # TODO detect and m
     if index_project:
         indexer.parse(text,index_project,file_name)
     
-            
-    for i,line in enumerate(text):
-        line_before = line
-        
+    
+    for i in range(len(text)):
+        line = text[i]
         ### managing end of line
         line = line.replace(" ,,","\\\\")
         
@@ -53,14 +58,14 @@ def main(text,result="latex",index_project='',file_name=''): # TODO detect and m
             first_part, mark, late_part = line.partition(',;')
             if not late_part:
                 break
-            late_part = parsers[late_part[0]].main(late_part = late_part,
+            late_part, text = parsers[late_part[0]].main(late_part = late_part,
                                                    text=text,
                                                    result=result,
                                                    line_nb = i)
             line = first_part + late_part
         text[i] = line
     
-    return '\n'.join(ntext)
+    return '\n'.join(text)
 
 def _load_file(path):
     """Loads an .ftk file and return it as a list of lines"""
@@ -76,6 +81,7 @@ def _load_file(path):
 def check(text):
     """Check syntax of text
     text is a list or a listlike"""
+    text = text.copy()
     if not isinstance(text,list): # TEST
         raise TypeError("text must be a listlike :\n{}".format(text))
     
@@ -116,7 +122,7 @@ def check(text):
                 checker.checkmark(mark_to_test,parser,line,i)
                 checker.checkargs(parser,mark_to_test,sline,line,i)
                 
-                # checking closing tag TEST
+                # checking closing tag TEST BUG
                 if parser.has_closing_tag:
                     closing_tag = closing_mark + mark_to_test
                     opening_tag = opening_mark + mark_to_test
@@ -128,6 +134,7 @@ def check(text):
                         sline = part1 + part2
                     else: # looking for closing tag in the rest of the text
                         for j,line2 in enumerate(text[i+1:]):
+                            j+=i+1
                             fline2, mark_expected, sline2 = line2.partition(closing_tag)
                             if opening_tag in fline2:
                                 print("Opening tag not closed, line {}".format(i))
