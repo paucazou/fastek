@@ -89,7 +89,7 @@ Tags are case sensitive. Tags which have no closing tags are closed by the end o
   * p: part. LaTeX: \part{}
   * h: paragraph. LaTeX: \paragraph{}
   * r: subparagraph. LaTeX: \subparagraph{}
-* Not numbered titles can be created by adding '*' just after subtag. Example : ",;tc* A great thing", LaTeX: "\chapter*{A great thing}"
+* Not numbered titles can be created by adding `*` just after subtag. Example : `,;tc* A great thing`, LaTeX: `\chapter*{A great thing}`
 
 
 ## Special tags
