@@ -114,9 +114,9 @@ def check(text):
                 mark_to_test = sline.split()[0]
                 parser = parsers[mark_to_test[0]]
                 checker.checkmark(mark_to_test,parser,line,i)
-                #checker.checkargs(parser,mark_to_test,sline,line,i) # TODO checks if arguments are present, if necessary
+                checker.checkargs(parser,mark_to_test,sline,line,i)
                 
-                # checking closing tag
+                # checking closing tag TEST
                 if parser.has_closing_tag:
                     closing_tag = closing_mark + mark_to_test
                     opening_tag = opening_mark + mark_to_test
@@ -149,8 +149,8 @@ def check(text):
                     line = fline + nothing + sline
                     break
         
-        # checking alone closing tags -> closing tags are supposed to be deleted
-        if closing_mark in line:
+        # checking alone closing tags -> closing tags are supposed to be deleted TEST
+        if closing_mark in line: 
             alone_closing_tag = utils.wrappedchars(line,closing_mark)
             utils.underlineall(line,alone_closing_tag)
             raise SyntaxError("An only closing tag has been found in line {}".format(i))

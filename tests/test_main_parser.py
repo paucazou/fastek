@@ -11,7 +11,8 @@ fmp.parsers = {'v':mock.MagicMock(),'o':mock.MagicMock(),'c':mock.MagicMock()}
 fmp.parsers['o'].has_closing_tag= False
 fmp.parsers['c'].has_closing_tag= True
 
-def test_check():
+@mock.patch("checker")
+def test_check(mchecker):
     # text not a list
     text = """text """
     with pytest.raises(TypeError):
@@ -37,7 +38,40 @@ def test_check():
     # legal closing tag
     text = """,;c something ;;c""".split("\n")
     assert fmp.check(text) == True
-
+    
+    # closing tag before opening tag
+    text = """;;c""".split("\n")
+    with pytest.raises(SyntaxError):
+        fmp.check(text)
+        
+    # closing tag before opening tag
+    # even if an opening is in the line
+    text = """;;c ,;c""".split("\n")
+    with pytest.raises(SyntaxError):
+        fmp.check(text)
+        
+    # closing tag missing
+    text = """,;c """.split("\n")
+    with pytest.raises(SyntaxError):
+        fmp.check(text)
+        
+    # closing tag missing with more than one line
+    text = """,;c
+    
+    """.split("\n")
+    with pytest.raises(SyntaxError):
+        fmp.check(text)
+        
+    # new opening tag before closing tag
+    text = """,;c ,;c ;;c""".split()
+    with pytest.raises(SyntaxError):
+        fmp.check(text)
+        
+    # test if checker has been called
+    mchecker.reset()
+    text = """,;c and so ;;c""".split("\n")
+    fmp.check(text)
+    mchecker.checkmark.assert_called_once_with(fmp.parsers['c'],',;c'," and so ;;c",",;c and so ;;c",0)
 
 
 
