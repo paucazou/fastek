@@ -27,11 +27,6 @@ def test_check_syntax():
     with pytest.raises(SyntaxError): # space after ::
         vp.check_syntax(text)
 
-    text = """,;v placeholder something
-    A sentence::placeholder""".split("\n")
-    with pytest.raises(SyntaxError): # no space before
-        vp.check_syntax(text)
-
     text = """::nameunknown """.split("\n")
     with pytest.raises(NameError): # name unknown
         vp.check_syntax(text)
